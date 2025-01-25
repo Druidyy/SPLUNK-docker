@@ -1,1 +1,1 @@
-# SPLUNK-docker
+# SPLUNK
