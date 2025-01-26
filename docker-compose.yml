@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  splunk:
+    image: splunk/splunk:latest
+    container_name: splunk
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_PASSWORD=YourStrongPassword123!
+      - SPLUNK_HTTPPORT=8000
+    ports:
+      - "8000:8000" # Splunk Web Interface
+      - "8088:8088" # HTTP Event Collector (HEC)
+      - "9997:9997" # Forwarder port
+    volumes:
+      - splunk-data:/opt/splunk/var
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "/sbin/checksplunk"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  splunk-data:
+    driver: local
