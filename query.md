@@ -7,8 +7,7 @@ index="main" | stats count by sourcetype&
 index="main" sourcetype="WinEventLog:Sysmon" | stats count by EventCode
 ```
 
-- Unusual Parent/Process ( Hunt Evil Cheet sheat [Hunt Evil] (https://sansorg.egnyte.com/dl/WFdH1hHnQI)
-  ![Alt Text](https://via.placeholder.com/150)
+- Unusual Parent/Process ( Hunt Evil Cheet sheat ![Hunt Evil] (https://sansorg.egnyte.com/dl/WFdH1hHnQI)
   ```
   index="main" sourcetype="WinEventLog:Sysmon" EventCode=1 | stats count by ParentImage, Image
   ```
