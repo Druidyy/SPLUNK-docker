@@ -1,0 +1,2 @@
+Query 
+**index="main" | stats count by sourcetype&**
