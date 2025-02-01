@@ -1,1 +1,1 @@
-``` index="main" | stats count by sourcetype& ```
+``` index="main" | stats count by sourcetype&
