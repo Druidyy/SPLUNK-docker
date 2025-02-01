@@ -21,7 +21,8 @@ More focus on CMD and Powershell
   ```
 Event Code 4662 is triggered when an Active Directory (AD) object is accessed. Access Mask 0x100 specifically requests Control Access typically needed for DCSync's high-level permissions. 
 Check for the GUID [DS-Replication-Get-Changes-All extended right](https://learn.microsoft.com/en-us/windows/win32/adschema/r-ds-replication-get-changes-all) (**1131f6ad-9c07-11d1-f79f-00c04fc2dcd2
-**). 
+**).
+
 - Detect Process interact with lsass
   ```
   index="main" EventCode=10 lsass | stats count by SourceImage
