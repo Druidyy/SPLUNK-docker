@@ -1,3 +1,3 @@
-``` 
-```plaintext
+
+```
 index="main" | stats count by sourcetype&
