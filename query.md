@@ -8,10 +8,11 @@ index="main" sourcetype="WinEventLog:Sysmon" | stats count by EventCode
 ```
 
 - Unusual Parent/Process ( Hunt Evil Cheet sheat [Hunt Evil] (https://sansorg.egnyte.com/dl/WFdH1hHnQI)
+  ![Alt Text](https://via.placeholder.com/150)
   ```
   index="main" sourcetype="WinEventLog:Sysmon" EventCode=1 | stats count by ParentImage, Image
   ```
-More focus on CMD and Powershell
+  More focus on CMD and Powershell
   ```
   index="main" sourcetype="WinEventLog:Sysmon" EventCode=1 (Image="*cmd.exe" OR Image="*powershell.exe") | stats count by ParentImage, Image
   ```
