@@ -40,3 +40,8 @@ Check for the GUID [DS-Replication-Get-Changes-All extended right](https://learn
  index="main" CallTrace="*UNKNOWN*" SourceImage!="*Microsoft.NET*" CallTrace!=*ni.dll* CallTrace!=*clr.dll* CallTrace!=*wow64* SourceImage!="C:\\Windows\\Explorer.EXE" | where SourceImage!=TargetImage | stats count by SourceImage, TargetImage, CallTrace
  ```
 
+* Detecting Unmanaged PowerShell/C-Sharp Injection with event 7
+  ```
+  index="main" sourcetype="WinEventLog:Sysmon" host="XXXX"  EventCode=7  ImageLoaded="*clrjit.dll*" OR  ImageLoaded="*clr.dll*" 
+  | stats count by Image
+  ```
