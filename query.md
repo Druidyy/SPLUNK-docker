@@ -14,7 +14,7 @@
    ```
    index="main" sourcetype="WinEventLog:Sysmon" EventCode=1 (Image="*cmd.exe" OR Image="*powershell.exe") | stats count by ParentImage, Image
    ```
-   * Check cmd:
+   * Check cmd with the suspicious parent Image :
      ```
      index="main" sourcetype="WinEventLog:Sysmon" EventCode=1 (Image="*cmd.exe" OR Image="*powershell.exe") AND ParentImage="*rundll*" | stats count by ParentImage,ParentProcessId, Image, CommandLine
      ```
