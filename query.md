@@ -31,7 +31,8 @@ Check for the GUID [DS-Replication-Get-Changes-All extended right](https://learn
   ```
   index="main" EventCode=10 lsass SourceImage="C:\\Windows\\System32\\notepad.exe"
   ```
-- asdasd
+-  Alerts from malicious malware based on API calls from UNKNOWN regions of memory
   ```
   index="main" CallTrace="*UNKNOWN*" SourceImage!="*Microsoft.NET*" CallTrace!=*ni.dll* CallTrace!=*clr.dll* CallTrace!=*wow64* SourceImage!="C:\\Windows\\Explorer.EXE" | where SourceImage!=TargetImage | stats count by SourceImage, TargetImage, CallTrace
 ```
+
