@@ -1,1 +1,3 @@
-``` index="main" | stats count by sourcetype&
+``` 
+```spl
+index="main" | stats count by sourcetype&
