@@ -1,2 +1,2 @@
-Query 
-**index="main" | stats count by sourcetype&**
+Query
+```index="main" | stats count by sourcetype&
