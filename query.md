@@ -14,6 +14,10 @@
    ```
    index="main" sourcetype="WinEventLog:Sysmon" EventCode=1 (Image="*cmd.exe" OR Image="*powershell.exe") | stats count by ParentImage, Image
    ```
+   * Check cmd:
+     ```
+     index="main" sourcetype="WinEventLog:Sysmon" EventCode=1 (Image="*cmd.exe" OR Image="*powershell.exe") AND ParentImage="*rundll*" | stats count by ParentImage,ParentProcessId, Image, CommandLine
+     ```
 * Detect potential DCsync:
  ```
  index="main" EventCode=4662 Access_Mask=0x100 Account_Name!=*$
