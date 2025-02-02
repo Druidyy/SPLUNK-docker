@@ -57,3 +57,5 @@ Check for the GUID [DS-Replication-Get-Changes-All extended right](https://learn
   | sort - _time
   ```
 #[Detecting](https://hurricanelabs.com/splunk-tutorials/splunking-with-sysmon-part-3-detecting-psexec-in-your-environment/) [PSexec](https://www.synacktiv.com/publications/traces-of-windows-remote-command-execution) :  
+
+ *Case 1: Leveraging Sysmon Event ID 13* 
