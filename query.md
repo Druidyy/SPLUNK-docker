@@ -58,4 +58,9 @@ Check for the GUID [DS-Replication-Get-Changes-All extended right](https://learn
   ```
 ## [Detecting](https://hurricanelabs.com/splunk-tutorials/splunking-with-sysmon-part-3-detecting-psexec-in-your-environment/) [PSexec](https://www.synacktiv.com/publications/traces-of-windows-remote-command-execution) :  
 
- - *Case 1: Leveraging Sysmon Event ID 13* 
+ - *Case 1: Leveraging Sysmon Event ID 13*
+    ```
+    index="main" sourcetype="WinEventLog:Sysmon" EventCode=13 Image="C:\\Windows\\system32\\services.exe" TargetObject="HKLM\\System\\CurrentControlSet\\Services\\*\\ImagePath" | rex field=Details "(?<reg_file_name>[^\\\]+)$" | eval reg_file_name     = lower(reg_file_name), file_name = if(isnull(file_name),reg_file_name,lower(file_name)) | stats values(Image) AS Image, values(Details) AS RegistryDetails, values(_time) AS EventTimes, count by file_name, ComputerName
+    ```
+>Case 2: Leveraging Sysmon Event ID 11
+
