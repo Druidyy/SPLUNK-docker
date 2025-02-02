@@ -62,5 +62,32 @@ Check for the GUID [DS-Replication-Get-Changes-All extended right](https://learn
     ```
     index="main" sourcetype="WinEventLog:Sysmon" EventCode=13 Image="C:\\Windows\\system32\\services.exe" TargetObject="HKLM\\System\\CurrentControlSet\\Services\\*\\ImagePath" | rex field=Details "(?<reg_file_name>[^\\\]+)$" | eval reg_file_name     = lower(reg_file_name), file_name = if(isnull(file_name),reg_file_name,lower(file_name)) | stats values(Image) AS Image, values(Details) AS RegistryDetails, values(_time) AS EventTimes, count by file_name, ComputerName
     ```
->Case 2: Leveraging Sysmon Event ID 11
+>>Case 2: Leveraging Sysmon Event ID 11
+```
+index="main" sourcetype="WinEventLog:Sysmon" EventCode=11 Image=System | stats count by TargetFilename
 
+```
+
+>> Case 3: Leveraging Sysmon Event ID 18
+
+```
+index="main" sourcetype="WinEventLog:Sysmon" EventCode=18 Image=System | stats count by PipeName
+
+```
+
+### Example: Detection Of Utilizing Archive Files For Transferring Tools Or Data Exfiltration by detecting creation of archive
+
+```
+index="main" EventCode=11 (TargetFilename="*.zip" OR TargetFilename="*.rar" OR TargetFilename="*.7z") | stats count by ComputerName, User, TargetFilename | sort - count
+
+```
+### Example: Detection Of Utilizing PowerShell or MS Edge For Downloading Payloads/Tools
+```
+index="main" sourcetype="WinEventLog:Sysmon" EventCode=11 Image="*powershell.exe*" |  stats count by Image, TargetFilename |  sort + count
+
+```
+```
+index="main" sourcetype="WinEventLog:Sysmon" EventCode=11 Image="*msedge.exe" TargetFilename=*"Zone.Identifier" |  stats count by TargetFilename |  sort + count
+
+```
+*Zone.Identifier is indicative of a file downloaded from the interne
