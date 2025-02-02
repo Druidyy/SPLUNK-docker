@@ -45,3 +45,9 @@ Check for the GUID [DS-Replication-Get-Changes-All extended right](https://learn
   index="main" sourcetype="WinEventLog:Sysmon" host="XXXX"  EventCode=7  ImageLoaded="*clrjit.dll*" OR  ImageLoaded="*clr.dll*" 
   | stats count by Image
   ```
+  Found a suspicious process and check what it does:
+  ```
+  index="main" sourcetype="WinEventLog:Sysmon" EventCode=10 SourceImage="C:\\Windows\\System32\\rundll32.exe"
+  | table _time, host, SourceImage, TargetImage, GrantedAccess, CallTrace
+  | sort - _time
+  ```
