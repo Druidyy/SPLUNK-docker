@@ -56,12 +56,13 @@ Check for the GUID [DS-Replication-Get-Changes-All extended right](https://learn
   | table _time, host, SourceImage, TargetImage, GrantedAccess, CallTrace
   | sort - _time
   ```
-###[Detecting](https://hurricanelabs.com/splunk-tutorials/splunking-with-sysmon-part-3-detecting-psexec-in-your-environment/) [PSexec](https://www.synacktiv.com/publications/traces-of-windows-remote-command-execution) :  
-
+### [Detecting](https://hurricanelabs.com/splunk-tutorials/splunking-with-sysmon-part-3-detecting-psexec-in-your-environment/) [PSexec](https://www.synacktiv.com/publications/traces-of-windows-remote-command-execution) :  
+As mentionnend on the [Detecting](https://hurricanelabs.com/splunk-tutorials/splunking-with-sysmon-part-3-detecting-psexec-in-your-environment/) psexec follow some "timeline" during his ececution 
  - *Case 1: Leveraging Sysmon Event ID 13*
     ```
     index="main" sourcetype="WinEventLog:Sysmon" EventCode=13 Image="C:\\Windows\\system32\\services.exe" TargetObject="HKLM\\System\\CurrentControlSet\\Services\\*\\ImagePath" | rex field=Details "(?<reg_file_name>[^\\\]+)$" | eval reg_file_name     = lower(reg_file_name), file_name = if(isnull(file_name),reg_file_name,lower(file_name)) | stats values(Image) AS Image, values(Details) AS RegistryDetails, values(_time) AS EventTimes, count by file_name, ComputerName
     ```
+    try to fucs on the less frequent 
 >>Case 2: Leveraging Sysmon Event ID 11
 ```
 index="main" sourcetype="WinEventLog:Sysmon" EventCode=11 Image=System | stats count by TargetFilename
@@ -74,6 +75,13 @@ index="main" sourcetype="WinEventLog:Sysmon" EventCode=11 Image=System | stats c
 index="main" sourcetype="WinEventLog:Sysmon" EventCode=18 Image=System | stats count by PipeName
 
 ```
+### Example: Detection Of Misspelling Legitimate Binaries for example psexec
+
+```
+index="main" sourcetype="WinEventLog:Sysmon" EventCode=1 (CommandLine="*psexe*.exe" NOT (CommandLine="*PSEXESVC.exe" OR CommandLine="*PsExec64.exe")) OR (ParentCommandLine="*psexe*.exe" NOT (ParentCommandLine="*PSEXESVC.exe" OR ParentCommandLine="*PsExec64.exe")) OR (ParentImage="*psexe*.exe" NOT (ParentImage="*PSEXESVC.exe" OR ParentImage="*PsExec64.exe")) OR (Image="*psexe*.exe" NOT (Image="*PSEXESVC.exe" OR Image="*PsExec64.exe")) |  table Image, CommandLine, ParentImage, ParentCommandLine
+
+```
+
 
 ### Example: Detection Of Utilizing Archive Files For Transferring Tools Or Data Exfiltration by detecting creation of archive
 
@@ -91,3 +99,21 @@ index="main" sourcetype="WinEventLog:Sysmon" EventCode=11 Image="*msedge.exe" Ta
 
 ```
 *Zone.Identifier is indicative of a file downloaded from the interne
+
+### Example: Detection Of Execution From Atypical Or Suspicious Locations
+
+```
+index="main" EventCode=1 | regex Image="C:\\\\Users\\\\.*\\\\Downloads\\\\.*" |  stats count by Image
+```
+check less frequent
+###  Example: Detection Of Executables or DLLs Being Created Outside The Windows Directory
+```
+index="main" EventCode=11 (TargetFilename="*.exe" OR TargetFilename="*.dll") TargetFilename!="*\\windows\\*" | stats count by User, TargetFilename | sort + count
+```
+Check less frequent first
+
+###  Detection Of Using Non-standard Ports For Communications/Transfers
+```
+index="main" EventCode=3 NOT (DestinationPort=80 OR DestinationPort=443 OR DestinationPort=22 OR DestinationPort=21) | stats count by SourceIp, DestinationIp, DestinationPort | sort - count
+
+```
