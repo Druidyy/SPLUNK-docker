@@ -156,3 +156,8 @@ We can filter per most event and try to identify Pprocess and Process supect rel
 ```
 index="main" sourcetype="WinEventLog:Sysmon" EventCode=1  | transaction ComputerName, Image  | where mvcount(ProcessGuid) > 1 | search Image="C:\\Windows\\System32\\rundll32.exe" ParentImage="C:\\Windows\\System32\\svchost.exe" | table CommandLine, ParentCommandLine
 ```
+### source process images that are creating an unusually high number of threads in other processes
+```
+index=* sourcetype="WinEventLog:Sysmon" EventCode=8 | bin _time span=1h | stats count as TargetImage by _time, SourceImage | streamstats avg(TargetImage) as avg stdev(TargetImage) as stdev by Image
+| sort -TargetImage
+```
