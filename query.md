@@ -161,3 +161,8 @@ index="main" sourcetype="WinEventLog:Sysmon" EventCode=1  | transaction Computer
 index=* sourcetype="WinEventLog:Sysmon" EventCode=8 | bin _time span=1h | stats count as TargetImage by _time, SourceImage | streamstats avg(TargetImage) as avg stdev(TargetImage) as stdev by Image
 | sort -TargetImage
 ```
+### Creation d'un process et dans la minute va initier une connection 
+```
+index=* sourcetype="WinEventLog:Sysmon" EventCode=1 OR EventCode=3 | transaction Image startswith=eval(EventCode=1) endswith=eval(EventCode=3) maxspan=1m
+|  table Image
+|  dedup Image```
